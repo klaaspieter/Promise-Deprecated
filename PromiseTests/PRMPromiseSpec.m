@@ -33,7 +33,7 @@ afterEach(^{
     rejectedError = nil;
 });
 
-it(@"raises an InvalidArgumentException if the resolved value is the same as the promise", ^{
+it(@"raises an InvalidArgumentException if x and the promise refer to the same object", ^{
     __block PRMPromise *promise1 = [[PRMPromise alloc] init];
     
     [[theBlock(^{
