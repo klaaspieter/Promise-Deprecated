@@ -47,6 +47,9 @@
 
 - (PRMPromise *)fulfillWithValue:(id)theValue;
 {
+    if (theValue == self)
+        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:nil userInfo:nil];
+    
     if (self.onFulfilled)
         self.onFulfilled(theValue);
     

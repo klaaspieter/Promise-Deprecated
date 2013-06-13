@@ -61,6 +61,14 @@ afterEach(^{
     rejectedError = nil;
 });
 
+it(@"raises an InvalidArgumentException if the resolved value is the same as the promise", ^{
+    __block PRMPromise *promise1 = [[PRMPromise alloc] init];
+    
+    [[theBlock(^{
+       [promise1 fulfillWithValue:promise1];
+    }) should] raiseWithName:NSInvalidArgumentException];
+});
+
 it(@"can fulfill a promise", ^{
     NSString *value = @"value";
     PRMPromise *promise = [testObject fulfilledPromiseWithValue:value];
