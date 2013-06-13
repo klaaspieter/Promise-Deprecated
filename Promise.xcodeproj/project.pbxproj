@@ -11,11 +11,11 @@
 		A1F00A121769B85D00CEA4BA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1F00A111769B85D00CEA4BA /* Foundation.framework */; };
 		A1F00A171769B85D00CEA4BA /* PRMPromise.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A1F00A161769B85D00CEA4BA /* PRMPromise.h */; };
 		A1F00A191769B85D00CEA4BA /* PRMPromise.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F00A181769B85D00CEA4BA /* PRMPromise.m */; };
-		A1F00A201769B85D00CEA4BA /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1F00A1F1769B85D00CEA4BA /* XCTest.framework */; };
 		A1F00A211769B85D00CEA4BA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1F00A111769B85D00CEA4BA /* Foundation.framework */; };
 		A1F00A231769B85D00CEA4BA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1F00A221769B85D00CEA4BA /* UIKit.framework */; };
 		A1F00A261769B85D00CEA4BA /* libPromise.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1F00A0E1769B85D00CEA4BA /* libPromise.a */; };
 		A1F00A2C1769B85D00CEA4BA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A1F00A2A1769B85D00CEA4BA /* InfoPlist.strings */; };
+		A1F00A381769BCC100CEA4BA /* PRMPromiseSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F00A371769B8BE00CEA4BA /* PRMPromiseSpec.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,8 +48,7 @@
 		A1F00A151769B85D00CEA4BA /* Promise-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Promise-Prefix.pch"; sourceTree = "<group>"; };
 		A1F00A161769B85D00CEA4BA /* PRMPromise.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PRMPromise.h; sourceTree = "<group>"; };
 		A1F00A181769B85D00CEA4BA /* PRMPromise.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PRMPromise.m; sourceTree = "<group>"; };
-		A1F00A1E1769B85D00CEA4BA /* PromiseTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PromiseTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A1F00A1F1769B85D00CEA4BA /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		A1F00A1E1769B85D00CEA4BA /* PromiseTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PromiseTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1F00A221769B85D00CEA4BA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		A1F00A291769B85D00CEA4BA /* PromiseTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PromiseTests-Info.plist"; sourceTree = "<group>"; };
 		A1F00A2B1769B85D00CEA4BA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -70,7 +69,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1F00A201769B85D00CEA4BA /* XCTest.framework in Frameworks */,
 				A1F00A261769B85D00CEA4BA /* libPromise.a in Frameworks */,
 				A1F00A231769B85D00CEA4BA /* UIKit.framework in Frameworks */,
 				A1F00A211769B85D00CEA4BA /* Foundation.framework in Frameworks */,
@@ -96,7 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				A1F00A0E1769B85D00CEA4BA /* libPromise.a */,
-				A1F00A1E1769B85D00CEA4BA /* PromiseTests.xctest */,
+				A1F00A1E1769B85D00CEA4BA /* PromiseTests.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -105,7 +103,6 @@
 			isa = PBXGroup;
 			children = (
 				A1F00A111769B85D00CEA4BA /* Foundation.framework */,
-				A1F00A1F1769B85D00CEA4BA /* XCTest.framework */,
 				A1F00A221769B85D00CEA4BA /* UIKit.framework */,
 				B64FB5B3EE0D4ED386B1CDF6 /* libPods-PromiseTests.a */,
 			);
@@ -185,7 +182,7 @@
 			);
 			name = PromiseTests;
 			productName = PromiseTests;
-			productReference = A1F00A1E1769B85D00CEA4BA /* PromiseTests.xctest */;
+			productReference = A1F00A1E1769B85D00CEA4BA /* PromiseTests.octest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -270,6 +267,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1F00A381769BCC100CEA4BA /* PRMPromiseSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -402,7 +400,7 @@
 				);
 				INFOPLIST_FILE = "PromiseTests/PromiseTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = xctest;
+				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -419,7 +417,7 @@
 				GCC_PREFIX_HEADER = "Promise/Promise-Prefix.pch";
 				INFOPLIST_FILE = "PromiseTests/PromiseTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = xctest;
+				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};
