@@ -22,13 +22,16 @@
 
 - (ThenMethod)then;
 {
-    return ^(PRMFulfilledHandler onFulfilled, PRMRejectedHandler onReject) {
+    return ^(PRMFulfilledHandler onFulfilled, PRMRejectedHandler onRejected) {
+
+        self.onFulfilled = onFulfilled;
+        self.onRejected = onRejected;
         
-        if (self.isRejected)
-            onReject(self.error);
+        if (self.isRejected && self.onRejected)
+            self.onRejected(self.error);
         
-        if (self.isFulfilled)
-            onFulfilled(self.value);
+        if (self.isFulfilled && self.onFulfilled)
+            self.onFulfilled(self.value);
         
         return self;
     };
