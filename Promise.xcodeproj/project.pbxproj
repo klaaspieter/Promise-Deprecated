@@ -12,7 +12,6 @@
 		A1F00A171769B85D00CEA4BA /* PRMPromise.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A1F00A161769B85D00CEA4BA /* PRMPromise.h */; };
 		A1F00A191769B85D00CEA4BA /* PRMPromise.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F00A181769B85D00CEA4BA /* PRMPromise.m */; };
 		A1F00A211769B85D00CEA4BA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1F00A111769B85D00CEA4BA /* Foundation.framework */; };
-		A1F00A231769B85D00CEA4BA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1F00A221769B85D00CEA4BA /* UIKit.framework */; };
 		A1F00A261769B85D00CEA4BA /* libPromise.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1F00A0E1769B85D00CEA4BA /* libPromise.a */; };
 		A1F00A2C1769B85D00CEA4BA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A1F00A2A1769B85D00CEA4BA /* InfoPlist.strings */; };
 		A1F00A381769BCC100CEA4BA /* PRMPromiseSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F00A371769B8BE00CEA4BA /* PRMPromiseSpec.m */; };
@@ -43,6 +42,8 @@
 
 /* Begin PBXFileReference section */
 		6CCB6DD4E4524C91889377CF /* Pods-PromiseTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PromiseTests.xcconfig"; path = "Pods/Pods-PromiseTests.xcconfig"; sourceTree = SOURCE_ROOT; };
+		A1178017176B060D00633A26 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		A1178029176B060E00633A26 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		A1F00A0E1769B85D00CEA4BA /* libPromise.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPromise.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1F00A111769B85D00CEA4BA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		A1F00A151769B85D00CEA4BA /* Promise-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Promise-Prefix.pch"; sourceTree = "<group>"; };
@@ -70,7 +71,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1F00A261769B85D00CEA4BA /* libPromise.a in Frameworks */,
-				A1F00A231769B85D00CEA4BA /* UIKit.framework in Frameworks */,
 				A1F00A211769B85D00CEA4BA /* Foundation.framework in Frameworks */,
 				9AC4BA8637CF44DBB0498677 /* libPods-PromiseTests.a in Frameworks */,
 			);
@@ -79,6 +79,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A1178016176B060D00633A26 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A1178017176B060D00633A26 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
 		A1F00A051769B85D00CEA4BA = {
 			isa = PBXGroup;
 			children = (
@@ -105,6 +113,8 @@
 				A1F00A111769B85D00CEA4BA /* Foundation.framework */,
 				A1F00A221769B85D00CEA4BA /* UIKit.framework */,
 				B64FB5B3EE0D4ED386B1CDF6 /* libPods-PromiseTests.a */,
+				A1178029176B060E00633A26 /* XCTest.framework */,
+				A1178016176B060D00633A26 /* Other Frameworks */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -193,6 +203,11 @@
 			attributes = {
 				CLASSPREFIX = PRM;
 				LastUpgradeCheck = 0500;
+				TargetAttributes = {
+					A1F00A1D1769B85D00CEA4BA = {
+						TestTargetID = A1178012176B060D00633A26;
+					};
+				};
 			};
 			buildConfigurationList = A1F00A091769B85D00CEA4BA /* Build configuration list for PBXProject "Promise" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -400,6 +415,7 @@
 				);
 				INFOPLIST_FILE = "PromiseTests/PromiseTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
@@ -417,6 +433,7 @@
 				GCC_PREFIX_HEADER = "Promise/Promise-Prefix.pch";
 				INFOPLIST_FILE = "PromiseTests/PromiseTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;

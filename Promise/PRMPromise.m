@@ -20,46 +20,25 @@
 
 @implementation PRMPromise
 
+- (id)init;
+{
+    return [self initWithResolver:nil];
+}
+
+- (id)initWithResolver:(PRMPromiseResolver)theResolver;
+{
+    NSParameterAssert(theResolver);
+    
+    if (self = [super init])
+    {
+    }
+    
+    return self;
+}
+
 - (ThenMethod)then;
 {
-    return ^(PRMFulfilledHandler onFulfilled, PRMRejectedHandler onRejected) {
-
-        self.onFulfilled = onFulfilled;
-        self.onRejected = onRejected;
-        
-        if (self.isRejected && self.onRejected)
-            self.onRejected(self.error);
-        
-        if (self.isFulfilled && self.onFulfilled)
-            self.onFulfilled(self.value);
-        
-        return self;
-    };
-}
-
-- (PRMPromise *)rejectWithError:(NSError *)theError;
-{
-    if (self.onRejected)
-        self.onRejected(theError);
-    
-    self.error = theError;
-    self.isRejected = YES;
-    
-    return self;
-}
-
-- (PRMPromise *)fulfillWithValue:(id)theValue;
-{
-    if (theValue == self)
-        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:nil userInfo:nil];
-    
-    if (self.onFulfilled)
-        self.onFulfilled(theValue);
-    
-    self.value = theValue;
-    self.isFulfilled = YES;
-    
-    return self;
+    return nil;
 }
 
 @end

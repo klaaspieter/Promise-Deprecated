@@ -12,54 +12,16 @@
 
 SPEC_BEGIN(PRMPromiseSpec)
 
-__block PRMFulfilledHandler fulfilledBlock;
-__block PRMRejectedHandler rejectedBlock;
-
-__block id fulfilledValue;
-__block NSError *rejectedError;
-
-beforeEach(^{
-    fulfilledBlock = ^(id theValue) {
-        fulfilledValue = theValue;
-    };
-    
-    rejectedBlock = ^(NSError *theError) {
-        rejectedError = theError;
-    };
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-variable"
+describe(@"initialization", ^{
+    it(@"throws if the resolver is not a block", ^{
+        [[theBlock(^{
+            PRMPromise *promise = [[PRMPromise alloc] init];
+        }) should] raiseWithName:NSInternalInconsistencyException];
+    });
 });
-
-afterEach(^{
-    fulfilledValue = nil;
-    rejectedError = nil;
-});
-
-it(@"raises an InvalidArgumentException if x and the promise refer to the same object", ^{
-    __block PRMPromise *promise1 = [[PRMPromise alloc] init];
-    
-    [[theBlock(^{
-       [promise1 fulfillWithValue:promise1];
-    }) should] raiseWithName:NSInvalidArgumentException];
-});
-
-it(@"can fulfill a promise", ^{
-    NSString *value = @"value";
-    PRMPromise *promise = [[PRMPromise alloc] init];
-    promise.then(fulfilledBlock, rejectedBlock);
-    [promise fulfillWithValue:value];
-    
-    [[fulfilledValue should] equal:value];
-    [rejectedError shouldBeNil];
-});
-
-it(@"can reject a promise", ^{
-    NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:nil];
-    PRMPromise *promise = [[PRMPromise alloc] init];
-    promise.then(fulfilledBlock, rejectedBlock);
-    [promise rejectWithError:error];
-    
-    [[rejectedError should] equal:error];
-    [fulfilledValue shouldBeNil];
-});
+#pragma clang diagnostic pop
 
 SPEC_END
 
