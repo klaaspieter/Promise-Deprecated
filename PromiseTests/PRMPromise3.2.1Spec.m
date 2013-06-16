@@ -9,29 +9,14 @@
 #import "Kiwi.h"
 
 #import "PRMPromise.h"
+#import "helpers.h"
 
 SPEC_BEGIN(PRMPromise3_2_1Spec)
 
-__block PRMPromiseResolverBlock fulfilled;
-__block PRMPromiseResolverBlock rejected;
 __block NSDictionary *dummy = @{ @"dummy": @"dummy" };
 
 __block id value;
 __block id reason;
-
-beforeEach(^{
-    fulfilled = ^PRMPromise *(id theReason) {
-        return [[PRMPromise alloc] initWithResolver:^(PRMPromiseResolverBlock resolve, PRMPromiseResolverBlock reject) {
-            resolve(theReason);
-        }];
-    };
-    
-    rejected = ^PRMPromise *(id theReason) {
-        return [[PRMPromise alloc] initWithResolver:^(PRMPromiseResolverBlock resolve, PRMPromiseResolverBlock reject) {
-            reject(theReason);
-        }];
-    };
-});
 
 describe(@"3.2.1: Both `onFulfilled` and `onRejected` are optional arguments", ^{
     it(@"3.2.1.1: must be ignored if `onFulfilled is not a function", ^{
