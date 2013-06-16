@@ -20,6 +20,40 @@ describe(@"initialization", ^{
             PRMPromise *promise = [[PRMPromise alloc] init];
         }) should] raiseWithName:NSInternalInconsistencyException];
     });
+    
+    it(@"is resolved if 'resolve' is called with a value", ^{
+        NSString *resolvedValue = @"value";
+        PRMPromise *promise = [[PRMPromise alloc] initWithResolver:^(PRMFulfilledHandler resolve, PRMRejectedHandler reject) {
+            resolve(resolvedValue);
+        }];
+        
+        __block NSString *value;
+        promise.then(^(id theValue) {
+            value = theValue;
+        }, nil);
+        
+        [[value should] equal:resolvedValue];
+    });
+    
+    it(@"is rejected if 'reject' is called with an error", ^{
+        NSString *resolvedValue = @"value";
+        NSError *rejectedReason = [NSError errorWithDomain:@"" code:0 userInfo:nil];
+        PRMPromise *promise = [[PRMPromise alloc] initWithResolver:^(PRMFulfilledHandler resolve, PRMRejectedHandler reject) {
+            reject(rejectedReason);
+        }];
+        
+        __block NSString *value;
+        __block NSError *error;
+        
+        promise.then(^(id theValue) {
+            value = theValue;
+        }, ^(id theError) {
+            error = theError;
+        });
+        
+        [value shouldBeNil];
+        [[error should] equal:rejectedReason];
+    });
 });
 #pragma clang diagnostic pop
 
