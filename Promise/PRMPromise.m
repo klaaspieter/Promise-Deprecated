@@ -14,7 +14,7 @@
 @property (nonatomic, readwrite, assign) BOOL isResolved;
 
 @property (nonatomic, readwrite, strong) id value;
-@property (nonatomic, readwrite, strong) NSError *error;
+@property (nonatomic, readwrite, strong) id reason;
 
 @property (nonatomic, readwrite, strong) NSMutableArray *deferreds;
 
@@ -59,13 +59,13 @@
     self.value = theValue;
 }
 
-- (void)rejectPromise:(id)theError;
+- (void)rejectPromise:(id)theReason;
 {
     if (self.isResolved)
         return;
     
     self.isResolved = YES;
-    self.error = theError;
+    self.reason = theReason;
 }
 
 - (void)handle:(PRMHandler *)theHandler;
@@ -77,8 +77,8 @@
     }
     else
     {
-        theHandler.onRejected(self.error);
-        theHandler.rejector(self.error);
+        theHandler.onRejected(self.reason);
+        theHandler.rejector(self.reason);
     }
 }
 
@@ -97,7 +97,7 @@
 
 - (BOOL)isRejected;
 {
-    return !!self.error;
+    return !!self.reason;
 }
 
 - (BOOL)isFulfilled;
