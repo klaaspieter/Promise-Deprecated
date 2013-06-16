@@ -23,7 +23,7 @@ describe(@"initialization", ^{
     
     it(@"is resolved if 'resolve' is called with a value", ^{
         NSString *resolvedValue = @"value";
-        PRMPromise *promise = [[PRMPromise alloc] initWithResolver:^(PRMFulfilledHandler resolve, PRMRejectedHandler reject) {
+        PRMPromise *promise = [[PRMPromise alloc] initWithResolver:^(PRMPromiseResolverBlock resolve, PRMPromiseResolverBlock reject) {
             resolve(resolvedValue);
         }];
         
@@ -38,7 +38,7 @@ describe(@"initialization", ^{
     it(@"is rejected if 'reject' is called with an error", ^{
         NSString *resolvedValue = @"value";
         NSError *rejectedReason = [NSError errorWithDomain:@"" code:0 userInfo:nil];
-        PRMPromise *promise = [[PRMPromise alloc] initWithResolver:^(PRMFulfilledHandler resolve, PRMRejectedHandler reject) {
+        PRMPromise *promise = [[PRMPromise alloc] initWithResolver:^(PRMPromiseResolverBlock resolve, PRMPromiseResolverBlock reject) {
             reject(rejectedReason);
         }];
         
@@ -57,7 +57,7 @@ describe(@"initialization", ^{
     
     it(@"is rejected if the resolver throws an exception", ^{
         NSException *resolvedException = [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Test" userInfo:nil];
-        PRMPromise *promise = [[PRMPromise alloc] initWithResolver:^(PRMFulfilledHandler resolve, PRMRejectedHandler reject) {
+        PRMPromise *promise = [[PRMPromise alloc] initWithResolver:^(PRMPromiseResolverBlock resolve, PRMPromiseResolverBlock reject) {
             @throw resolvedException;
         }];
         

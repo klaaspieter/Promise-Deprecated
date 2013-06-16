@@ -36,10 +36,12 @@
         self.deferreds = [[NSMutableArray alloc] init];
         
         @try {
-            theResolver(^(id theValue) {
+            theResolver(^PRMPromise * (id theValue) {
                 [self resolvePromise:theValue];
-            }, ^(id theError) {
+                return nil;
+            }, ^PRMPromise *(id theError) {
                 [self rejectPromise:theError];
+                return nil;
             });
         }
         @catch (NSException *exception) {
@@ -85,7 +87,7 @@
 - (ThenMethod)then;
 {
     return ^(PRMFulfilledHandler onFulfilled, PRMRejectedHandler onRejected) {
-        return [[PRMPromise alloc] initWithResolver:^(PRMFulfilledHandler resolve, PRMRejectedHandler reject) {
+        return [[PRMPromise alloc] initWithResolver:^(PRMPromiseResolverBlock resolve, PRMPromiseResolverBlock reject) {
             PRMHandler *handler = [[PRMHandler alloc] initWithFulfilledHandler:onFulfilled
                                                                rejectedHandler:onRejected
                                                                       resolver:resolve

@@ -9,13 +9,14 @@
 /* Begin PBXBuildFile section */
 		9AC4BA8637CF44DBB0498677 /* libPods-PromiseTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B64FB5B3EE0D4ED386B1CDF6 /* libPods-PromiseTests.a */; };
 		A1D1FA48176DE55200ADD474 /* PRMHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = A1D1FA47176DE55200ADD474 /* PRMHandler.m */; };
+		A1D1FB80176DFC2400ADD474 /* PRMHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = A1D1FA47176DE55200ADD474 /* PRMHandler.m */; };
 		A1F00A121769B85D00CEA4BA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1F00A111769B85D00CEA4BA /* Foundation.framework */; };
 		A1F00A171769B85D00CEA4BA /* PRMPromise.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A1F00A161769B85D00CEA4BA /* PRMPromise.h */; };
 		A1F00A191769B85D00CEA4BA /* PRMPromise.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F00A181769B85D00CEA4BA /* PRMPromise.m */; };
-		A1F00A211769B85D00CEA4BA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1F00A111769B85D00CEA4BA /* Foundation.framework */; };
 		A1F00A261769B85D00CEA4BA /* libPromise.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1F00A0E1769B85D00CEA4BA /* libPromise.a */; };
 		A1F00A2C1769B85D00CEA4BA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A1F00A2A1769B85D00CEA4BA /* InfoPlist.strings */; };
 		A1F00A381769BCC100CEA4BA /* PRMPromiseSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F00A371769B8BE00CEA4BA /* PRMPromiseSpec.m */; };
+		A1D1FB84176E050500ADD474 /* PRMPromise3.2.1Spec.m in Sources */ = {isa = PBXBuildFile; fileRef = A1D1FB82176E04B100ADD474 /* PRMPromise3.2.1Spec.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		A1178029176B060E00633A26 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		A1D1FA46176DE55200ADD474 /* PRMHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PRMHandler.h; sourceTree = "<group>"; };
 		A1D1FA47176DE55200ADD474 /* PRMHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PRMHandler.m; sourceTree = "<group>"; };
+		A1D1FB82176E04B100ADD474 /* PRMPromise3.2.1Spec.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PRMPromise3.2.1Spec.m; sourceTree = "<group>"; };
 		A1F00A0E1769B85D00CEA4BA /* libPromise.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPromise.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1F00A111769B85D00CEA4BA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		A1F00A151769B85D00CEA4BA /* Promise-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Promise-Prefix.pch"; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 			children = (
 				A1F00A281769B85D00CEA4BA /* Supporting Files */,
 				A1F00A371769B8BE00CEA4BA /* PRMPromiseSpec.m */,
+				A1D1FB82176E04B100ADD474 /* PRMPromise3.2.1Spec.m */,
 			);
 			path = PromiseTests;
 			sourceTree = "<group>";
@@ -289,6 +292,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1F00A381769BCC100CEA4BA /* PRMPromiseSpec.m in Sources */,
+				A1D1FB84176E050500ADD474 /* PRMPromise3.2.1Spec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
