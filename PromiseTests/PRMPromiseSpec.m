@@ -54,6 +54,19 @@ describe(@"initialization", ^{
         [value shouldBeNil];
         [[error should] equal:rejectedReason];
     });
+    
+    it(@"is rejected if the resolver throws an exception", ^{
+        NSException *resolvedException = [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Test" userInfo:nil];
+        PRMPromise *promise = [[PRMPromise alloc] initWithResolver:^(PRMFulfilledHandler resolve, PRMRejectedHandler reject) {
+            @throw resolvedException;
+        }];
+        
+        __block NSException *exception = nil;
+        promise.then(^(id theValue) {}, ^(id theError) {
+            exception = theError;
+        });
+        [[exception should] equal:resolvedException];
+    });
 });
 #pragma clang diagnostic pop
 

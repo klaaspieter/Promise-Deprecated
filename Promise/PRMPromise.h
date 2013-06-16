@@ -11,7 +11,7 @@
 @class PRMPromise;
 
 typedef void (^PRMFulfilledHandler)(id theResult);
-typedef void (^PRMRejectedHandler)(NSError *theError);
+typedef void (^PRMRejectedHandler)(id theError);
 typedef PRMPromise *(^ThenMethod)(PRMFulfilledHandler onFulfilled, PRMRejectedHandler onRejected);
 
 typedef void (^PRMPromiseResolverBlock)(id theValue);

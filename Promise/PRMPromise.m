@@ -35,11 +35,16 @@
     {
         self.deferreds = [[NSMutableArray alloc] init];
         
-        theResolver(^(id theValue) {
-            [self resolvePromise:theValue];
-        }, ^(id theValue) {
-            [self rejectPromise:theValue];
-        });
+        @try {
+            theResolver(^(id theValue) {
+                [self resolvePromise:theValue];
+            }, ^(id theError) {
+                [self rejectPromise:theError];
+            });
+        }
+        @catch (NSException *exception) {
+            [self rejectPromise:exception];
+        }
     }
     
     return self;
@@ -54,7 +59,7 @@
     self.value = theValue;
 }
 
-- (void)rejectPromise:(NSError *)theError;
+- (void)rejectPromise:(id)theError;
 {
     if (self.isResolved)
         return;
