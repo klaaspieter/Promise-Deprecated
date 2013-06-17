@@ -13,6 +13,7 @@ SPEC_BEGIN(PRMPromise3_2_5Spec)
 
 __block NSDictionary *sentinel = @{@"sentinel": @"sentinel"};
 __block NSDictionary *other = @{@"other": @"other"};
+__block NSException *exception = [NSException exceptionWithName:NSInvalidArgumentException reason:@"" userInfo:nil];
 
 describe(@"3.2.5: `then` may be called multiple times on the same promise.", ^{
     describe(@"3.2.5.1: If/when `promise` is fulfilled, respective `onFulfilled` callbacks must execute in the order ", ^{
@@ -48,13 +49,13 @@ describe(@"3.2.5: `then` may be called multiple times on the same promise.", ^{
             [[theValue(rejectedHandlerCalled) should] beNo];
         });
         
-        pending(@"multiple fulfillment handlers, one of which throws", ^{
+        it(@"multiple fulfillment handlers, one of which throws", ^{
             PRMPromise *promise = fulfilled(sentinel);
             
             __block id handler1Value = nil;
             PRMPromiseResolverBlock handler1 = ^id (id theValue) { handler1Value = theValue; return other; };
             __block id handler2Value = nil;;
-            PRMPromiseResolverBlock handler2 = ^id (id theValue) { @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"" userInfo:nil]; };
+            PRMPromiseResolverBlock handler2 = ^id (id theValue) { handler2Value = theValue; @throw exception; return other; };
             __block id handler3Value = nil;;
             PRMPromiseResolverBlock handler3 = ^id (id theValue) { handler3Value = theValue; return other; };
             
@@ -181,13 +182,13 @@ describe(@"3.2.5: `then` may be called multiple times on the same promise.", ^{
             [[theValue(fulfilledHandlerCalled) should] beNo];
         });
         
-        pending(@"multiple rejection handlers, one of which throws", ^{
+        it(@"multiple rejection handlers, one of which throws", ^{
             PRMPromise *promise = rejected(sentinel);
             
             __block id handler1Value = nil;
             PRMPromiseResolverBlock handler1 = ^id (id theValue) { handler1Value = theValue; return other; };
             __block id handler2Value = nil;;
-            PRMPromiseResolverBlock handler2 = ^id (id theValue) { @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"" userInfo:nil];};
+            PRMPromiseResolverBlock handler2 = ^id (id theValue) { handler2Value = theValue; @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"" userInfo:nil];};
             __block id handler3Value = nil;;
             PRMPromiseResolverBlock handler3 = ^id (id theValue) { handler3Value = theValue; return other; };
             

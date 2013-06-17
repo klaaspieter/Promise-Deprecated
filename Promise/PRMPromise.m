@@ -38,10 +38,10 @@
         @try {
             theResolver(^PRMPromise * (id theValue) {
                 [self resolvePromise:theValue];
-                return nil;
-            }, ^PRMPromise *(id theError) {
-                [self rejectPromise:theError];
-                return nil;
+                return theValue;
+            }, ^PRMPromise *(id theReason) {
+                [self rejectPromise:theReason];
+                return theReason;
             });
         }
         @catch (NSException *exception) {
@@ -77,6 +77,7 @@
     [self.deferreds enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         [self handle:obj];
     }];
+    self.deferreds = [NSMutableArray array];
     
 }
 
@@ -88,16 +89,27 @@
         return;
     }
     
-    if (self.isFulfilled)
+    PRMPromiseResolverBlock block = self.isFulfilled ? theHandler.onFulfilled : theHandler.onRejected;
+    id value = self.isFulfilled ? self.value : self.reason;
+    
+    if (!block)
     {
-        theHandler.onFulfilled(self.value);
-        theHandler.resolver(self.value);
+        if (self.isFulfilled)
+            theHandler.resolver(value);
+        else
+            theHandler.rejector(value);
     }
-    else
-    {
-        theHandler.onRejected(self.reason);
-        theHandler.rejector(self.reason);
+    
+    id returnValue;
+    @try {
+        returnValue = block(value);
     }
+    @catch (NSException *exception) {
+        theHandler.rejector(exception);
+        return;
+    }
+    
+    theHandler.resolver(value);
 }
 
 - (ThenMethod)then;
