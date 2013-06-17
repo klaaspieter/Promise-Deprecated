@@ -72,6 +72,9 @@
 
 - (void)handle:(PRMHandler *)theHandler;
 {
+    if (!self.isResolved)
+        return;
+    
     if (self.isFulfilled)
     {
         theHandler.onFulfilled(self.value);

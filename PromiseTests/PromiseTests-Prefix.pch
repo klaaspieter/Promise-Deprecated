@@ -1,0 +1,15 @@
+
+//
+//  PromiseTests-Prefix.pch
+//  Promise
+//
+//  Created by Klaas Pieter Annema on 16-06-13.
+//
+//
+
+#ifndef Promise_PromiseTests_Prefix_pch
+#define Promise_PromiseTests_Prefix_pch
+
+#import "helpers.h"
+
+#endif

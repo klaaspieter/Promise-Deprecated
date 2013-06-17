@@ -6,16 +6,21 @@
 //
 //
 
+#import <Foundation/Foundation.h>
+
 #import "PRMPromise.h"
 
-PRMPromiseResolverBlock fulfilled = ^PRMPromise *(id theReason) {
-    return [[PRMPromise alloc] initWithResolver:^(PRMPromiseResolverBlock resolve, PRMPromiseResolverBlock reject) {
-            resolve(theReason);
-            }];
-};
+@interface PRMPending : NSObject
 
-PRMPromiseResolverBlock rejected = ^PRMPromise *(id theReason) {
-    return [[PRMPromise alloc] initWithResolver:^(PRMPromiseResolverBlock resolve, PRMPromiseResolverBlock reject) {
-            reject(theReason);
-            }];
-};
+@property (nonatomic, readonly, strong) PRMPromise *promise;
+@property (nonatomic, readonly, strong) PRMPromiseResolverBlock fulfill;
+@property (nonatomic, readonly, strong) PRMPromiseResolverBlock reject;
+
+@end
+
+@interface PRMAdapter : NSObject
++ (PRMPending *)pending;
+@end
+
+extern PRMPromise *fulfilled(id theValue);
+extern PRMPromise *rejected(id theReason);
