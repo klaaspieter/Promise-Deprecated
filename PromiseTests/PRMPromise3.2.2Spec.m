@@ -66,83 +66,98 @@ describe(@"3.2.2: If ~onFulfilled` is a function, ", ^{
             
             [[expectFutureValue(theValue(timesCalled)) shouldEventually] equal:theValue(1)];
         });
+        
+        it(@"trying to fulfill a pending promise more than once, immediately then delayed", ^{
+            PRMPending *tuple = PRMAdapter.pending;
+            __block NSUInteger timesCalled = 0;
+            
+            tuple.promise.then(^(id theValue) {
+                timesCalled++;
+            }, nil);
+            
+            tuple.fulfill(dummy);
+            
+            __block BOOL wasCalled = NO;
+            double delayInSeconds = 0.0;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                tuple.fulfill(dummy);
+                wasCalled = YES;
+            });
+            
+            [[expectFutureValue(theValue(wasCalled)) shouldEventually] beYes];
+            [[expectFutureValue(theValue(timesCalled)) shouldEventually] equal:theValue(1)];
+        });
+        
+        it(@"when multiple `then` calls are made, spaced apart in time", ^{
+            PRMPending *tuple = PRMAdapter.pending;
+            __block NSUInteger timesCalledFirst = 0;
+            __block NSUInteger timesCalledSecond = 0;
+            __block NSUInteger timesCalledThird = 0;
+            
+            tuple.promise.then(^(id theValue) {
+                timesCalledFirst++;
+            }, nil);
+            
+            __block BOOL secondBlockWasCalled = NO;
+            double delayInSeconds = 0.0;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                tuple.promise.then(^(id theValue) {
+                    timesCalledSecond++;
+                }, nil);
+                secondBlockWasCalled = YES;
+            });
+            
+            __block BOOL thirdBlockWasCalled = NO;
+            delayInSeconds = 0.05;
+            popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                tuple.promise.then(^(id theValue) {
+                    timesCalledThird++;
+                }, nil);
+                thirdBlockWasCalled = YES;
+            });
+            
+            __block BOOL fulfillBlockWasCalled = NO;
+            delayInSeconds = 0.1;
+            popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                tuple.fulfill(dummy);
+                fulfillBlockWasCalled = YES;
+            });
+            
+            [[expectFutureValue(theValue(secondBlockWasCalled)) shouldEventually] beYes];
+            [[expectFutureValue(theValue(thirdBlockWasCalled)) shouldEventually] beYes];
+            [[expectFutureValue(theValue(fulfillBlockWasCalled)) shouldEventually] beYes];
+            
+            [[expectFutureValue(theValue(timesCalledFirst)) shouldEventually] equal:theValue(1)];
+            [[expectFutureValue(theValue(timesCalledSecond)) shouldEventually] equal:theValue(1)];
+            [[expectFutureValue(theValue(timesCalledThird)) shouldEventually] equal:theValue(1)];
+        });
+        
+        it(@"when `then` is interleaved with fulfillment", ^{
+            PRMPending *tuple = PRMAdapter.pending;
+            __block NSUInteger timesCalledFirst = 0;
+            __block NSUInteger timesCalledSecond = 0;
+            
+            tuple.promise.then(^(id theValue) {
+                timesCalledFirst++;
+            }, nil);
+            
+            tuple.fulfill(dummy);
+            
+            tuple.promise.then(^(id theValue) {
+                timesCalledSecond++;
+            }, nil);
+            
+            [[expectFutureValue(theValue(timesCalledFirst)) shouldEventually] equal:theValue(1)];
+            [[expectFutureValue(theValue(timesCalledSecond)) shouldEventually] equal:theValue(1)];
+        });
     });
 });
 
 SPEC_END
-    
-    
-    //         specify("trying to fulfill a pending promise more than once, immediately then delayed", function (done) {
-    //             var tuple = pending();
-    //             var timesCalled = 0;
-    
-    //             tuple.promise.then(function onFulfilled() {
-    //                 assert.strictEqual(++timesCalled, 1);
-    //                 done();
-    //             });
-    
-    //             tuple.fulfill(dummy);
-    //             setTimeout(function () {
-    //                 tuple.fulfill(dummy);
-    //             }, 50);
-    //         });
-    
-    //         specify("when multiple `then` calls are made, spaced apart in time", function (done) {
-    //             var tuple = pending();
-    //             var timesCalled = [0, 0, 0];
-    
-    //             tuple.promise.then(function onFulfilled() {
-    //                 assert.strictEqual(++timesCalled[0], 1);
-    //             });
-    
-    //             setTimeout(function () {
-    //                 tuple.promise.then(function onFulfilled() {
-    //                     assert.strictEqual(++timesCalled[1], 1);
-    //                 });
-    //             }, 50);
-    
-    //             setTimeout(function () {
-    //                 tuple.promise.then(function onFulfilled() {
-    //                     assert.strictEqual(++timesCalled[2], 1);
-    //                     done();
-    //                 });
-    //             }, 100);
-    
-    //             setTimeout(function () {
-    //                 tuple.fulfill(dummy);
-    //             }, 150);
-    //         });
-    
-    //         specify("when `then` is interleaved with fulfillment", function (done) {
-    //             var tuple = pending();
-    //             var timesCalled = [0, 0];
-    
-    //             tuple.promise.then(function onFulfilled() {
-    //                 assert.strictEqual(++timesCalled[0], 1);
-    //             });
-    
-    //             tuple.fulfill(dummy);
-    
-    //             tuple.promise.then(function onFulfilled() {
-    //                 assert.strictEqual(++timesCalled[1], 1);
-    //                 done();
-    //             });
-    //         });
-    //     });
-    
-    //     describe("3.2.2.3: it must not be called if `onRejected` has been called.", function () {
-    //         testRejected(dummy, function (promise, done) {
-    //             var onRejectedCalled = false;
-    
-    //             promise.then(function onFulfilled() {
-    //                 assert.strictEqual(onRejectedCalled, false);
-    //                 done();
-    //             }, function onRejected() {
-    //                 onRejectedCalled = true;
-    //             });
-    
-    //             setTimeout(done, 100);
-    //         });
     
     //         specify("trying to reject then immediately fulfill", function (done) {
     //             var tuple = pending();
