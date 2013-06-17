@@ -49,41 +49,28 @@ describe(@"3.2.2: If ~onFulfilled` is a function, ", ^{
             [[theValue(timesCalled) should] equal:theValue(1)];
         });
         
-        pending(@"trying to fulfill a pending promise more than once, delayed", ^{
+        it(@"trying to fulfill a pending promise more than once, delayed", ^{
+            PRMPending *tuple = PRMAdapter.pending;
+            __block NSUInteger timesCalled = 0;
             
+            tuple.promise.then(^(id theValue) {
+                timesCalled++;
+            }, nil);
+            
+            double delayInSeconds = 0.0;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                tuple.fulfill(dummy);
+                tuple.fulfill(dummy);
+            });
+            
+            [[expectFutureValue(theValue(timesCalled)) shouldEventually] equal:theValue(1)];
         });
     });
 });
 
 SPEC_END
-
-    //         specify("trying to fulfill a pending promise more than once, immediately", function (done) {
-    //             var tuple = pending();
-    //             var timesCalled = 0;
     
-    //             tuple.promise.then(function onFulfilled() {
-    //                 assert.strictEqual(++timesCalled, 1);
-    //                 done();
-    //             });
-    
-    //             tuple.fulfill(dummy);
-    //             tuple.fulfill(dummy);
-    //         });
-    
-    //         specify("trying to fulfill a pending promise more than once, delayed", function (done) {
-    //             var tuple = pending();
-    //             var timesCalled = 0;
-    
-    //             tuple.promise.then(function onFulfilled() {
-    //                 assert.strictEqual(++timesCalled, 1);
-    //                 done();
-    //             });
-    
-    //             setTimeout(function () {
-    //                 tuple.fulfill(dummy);
-    //                 tuple.fulfill(dummy);
-    //             }, 50);
-    //         });
     
     //         specify("trying to fulfill a pending promise more than once, immediately then delayed", function (done) {
     //             var tuple = pending();

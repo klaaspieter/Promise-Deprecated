@@ -59,6 +59,7 @@
     
     self.isResolved = YES;
     self.value = theValue;
+    [self didResolve];
 }
 
 - (void)rejectPromise:(id)theReason;
@@ -68,12 +69,24 @@
     
     self.isResolved = YES;
     self.reason = theReason;
+    [self didResolve];
+}
+
+- (void)didResolve;
+{
+    [self.deferreds enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [self handle:obj];
+    }];
+    
 }
 
 - (void)handle:(PRMHandler *)theHandler;
 {
     if (!self.isResolved)
+    {
+        [self.deferreds addObject:theHandler];
         return;
+    }
     
     if (self.isFulfilled)
     {
