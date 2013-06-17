@@ -43,3 +43,7 @@ PRMPromise *rejected(id theReason) {
         reject(theReason);
     }];
 };
+
+void waitForIt() {
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+};

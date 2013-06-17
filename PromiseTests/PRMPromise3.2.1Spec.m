@@ -24,6 +24,7 @@ describe(@"3.2.1: Both `onFulfilled` and `onRejected` are optional arguments", ^
             reason = theReason;
         });
         
+        waitForIt();
         [[reason should] equal:dummy];
     });
     
@@ -32,6 +33,7 @@ describe(@"3.2.1: Both `onFulfilled` and `onRejected` are optional arguments", ^
             value = theValue;
         }, nil);
         
+        waitForIt();
         [[value should] equal:dummy];
     });
 });

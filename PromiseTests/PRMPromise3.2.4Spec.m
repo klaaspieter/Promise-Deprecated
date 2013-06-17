@@ -7,7 +7,7 @@
 //
 
 #import "Kiwi.h"
-
+#import "helpers.h"
 
 SPEC_BEGIN(PRMPromise3_2_4Spec)
 
@@ -25,6 +25,8 @@ describe(@"3.2.4: `then` must return before `onFulfilled or `onRejected` is call
         }, nil);
         
         thenHasReturned = YES;
+        
+        waitForIt();
         [[theValue(blockWasCalled) should] beYes];
     });
     
@@ -39,6 +41,8 @@ describe(@"3.2.4: `then` must return before `onFulfilled or `onRejected` is call
         });
         
         thenHasReturned = YES;
+        
+        waitForIt();
         [[theValue(blockWasCalled) should] beYes];
     });
 });

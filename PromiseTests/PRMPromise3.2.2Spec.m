@@ -22,6 +22,7 @@ describe(@"3.2.2: If ~onFulfilled` is a function, ", ^{
             value = theValue;
         }, nil);
         
+        waitForIt();
         [[value should] equal:dummy];
     });
     
@@ -32,6 +33,7 @@ describe(@"3.2.2: If ~onFulfilled` is a function, ", ^{
                 timesCalled++;
             }, nil);
             
+            waitForIt();
             [[theValue(timesCalled) should] equal:theValue(1)];
         });
         
@@ -46,6 +48,7 @@ describe(@"3.2.2: If ~onFulfilled` is a function, ", ^{
             tuple.fulfill(dummy);
             tuple.fulfill(dummy);
             
+            waitForIt();
             [[theValue(timesCalled) should] equal:theValue(1)];
         });
         
@@ -171,6 +174,7 @@ describe(@"3.2.2: If ~onFulfilled` is a function, ", ^{
             tuple.reject(dummy);
             tuple.fulfill(dummy);
             
+            waitForIt();
             [[theValue(onFulfilledCalled) should] beNo];
             [[theValue(onRejectedCalled) should] beYes];
         });

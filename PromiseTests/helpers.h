@@ -24,3 +24,5 @@
 
 extern PRMPromise *fulfilled(id theValue);
 extern PRMPromise *rejected(id theReason);
+
+extern void waitForIt();

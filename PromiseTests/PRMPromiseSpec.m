@@ -32,10 +32,11 @@ describe(@"initialization", ^{
             value = theValue;
         }, nil);
         
+        waitForIt();
         [[value should] equal:resolvedValue];
     });
     
-    it(@"is rejected if 'reject' is called with an error", ^{
+    it(@"is rejected if 'reject' is called with a reason", ^{
         NSString *resolvedValue = @"value";
         NSError *rejectedReason = [NSError errorWithDomain:@"" code:0 userInfo:nil];
         PRMPromise *promise = [[PRMPromise alloc] initWithResolver:^(PRMPromiseResolverBlock resolve, PRMPromiseResolverBlock reject) {
@@ -43,16 +44,17 @@ describe(@"initialization", ^{
         }];
         
         __block NSString *value;
-        __block NSError *error;
+        __block NSError *reason;
         
         promise.then(^(id theValue) {
             value = theValue;
-        }, ^(id theError) {
-            error = theError;
+        }, ^(id theReason) {
+            reason = theReason;
         });
         
+        waitForIt();
         [value shouldBeNil];
-        [[error should] equal:rejectedReason];
+        [[reason should] equal:rejectedReason];
     });
     
     it(@"is rejected if the resolver throws an exception", ^{
@@ -65,6 +67,8 @@ describe(@"initialization", ^{
         promise.then(^(id theValue) {}, ^(id theError) {
             exception = theError;
         });
+        
+        waitForIt();
         [[exception should] equal:resolvedException];
     });
 });

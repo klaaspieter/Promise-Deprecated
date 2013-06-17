@@ -22,6 +22,7 @@ describe(@"3.2.3: If `onRejected` is a function", ^{
             reason = theReason;
         });
         
+        waitForIt();
         [[reason should] equal:sentinel];
     });
     
@@ -34,6 +35,7 @@ describe(@"3.2.3: If `onRejected` is a function", ^{
                 timesCalled++;
             });
             
+            waitForIt();
             [[theValue(timesCalled) should] equal:theValue(1)];
         });
         
@@ -48,6 +50,7 @@ describe(@"3.2.3: If `onRejected` is a function", ^{
             tuple.reject(dummy);
             tuple.reject(dummy);
             
+            waitForIt();
             [[theValue(timesCalled) should] equal:theValue(1)];
         });
         
@@ -167,6 +170,7 @@ describe(@"3.2.3: If `onRejected` is a function", ^{
                 onRejectedCalled = YES;
             });
             
+            waitForIt();
             [[theValue(onFulfilledCalled) should] beYes];
             [[theValue(onRejectedCalled) should] beNo];
         });
@@ -185,6 +189,7 @@ describe(@"3.2.3: If `onRejected` is a function", ^{
             tuple.fulfill(dummy);
             tuple.reject(dummy);
             
+            waitForIt();
             [[theValue(onFulfilledCalled) should] beYes];
             [[theValue(onRejectedCalled) should] beNo];
         });
