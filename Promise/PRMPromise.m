@@ -108,7 +108,7 @@
                                                                rejectedHandler:onRejected
                                                                       resolver:resolve
                                                                       rejector:reject];
-            [self handle:handler];
+            [self performSelector:@selector(handle:) withObject:handler afterDelay:0.0];
         }];
     };
 }
