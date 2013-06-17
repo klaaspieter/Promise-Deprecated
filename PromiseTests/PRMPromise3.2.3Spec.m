@@ -18,8 +18,9 @@ describe(@"3.2.3: If `onRejected` is a function", ^{
     it(@"3.2.3.1: must be called after `promise` is rejected, with `promise`’s rejection reason as its first argument", ^{
         PRMPromise *promise = rejected(sentinel);
         __block id reason = nil;
-        promise.then(nil, ^(id theReason) {
+        promise.then(nil, ^id (id theReason) {
             reason = theReason;
+            return theReason;
         });
         
         waitForIt();
@@ -31,8 +32,9 @@ describe(@"3.2.3: If `onRejected` is a function", ^{
             __block NSUInteger timesCalled = 0;
             
             PRMPromise *promise = rejected(dummy);
-            promise.then(nil, ^(id theReason) {
+            promise.then(nil, ^id (id theReason) {
                 timesCalled++;
+                return theReason;
             });
             
             waitForIt();
@@ -43,8 +45,9 @@ describe(@"3.2.3: If `onRejected` is a function", ^{
             PRMPending *tuple = PRMAdapter.pending;
             __block NSUInteger timesCalled = 0;
             
-            tuple.promise.then(nil, ^(id theReason) {
+            tuple.promise.then(nil, ^id (id theReason) {
                 timesCalled++;
+                return theReason;
             });
             
             tuple.reject(dummy);
@@ -58,8 +61,9 @@ describe(@"3.2.3: If `onRejected` is a function", ^{
             PRMPending *tuple = PRMAdapter.pending;
             __block NSUInteger timesCalled = 0;
             
-            tuple.promise.then(nil, ^(id theReason) {
+            tuple.promise.then(nil, ^id (id theReason) {
                 timesCalled++;
+                return theReason;
             });
             
             double delayInSeconds = 0.0;
@@ -76,8 +80,9 @@ describe(@"3.2.3: If `onRejected` is a function", ^{
             PRMPending *tuple = PRMAdapter.pending;
             __block NSUInteger timesCalled = 0;
             
-            tuple.promise.then(nil, ^(id theReason) {
+            tuple.promise.then(nil, ^id (id theReason) {
                 timesCalled++;
+                return theReason;
             });
             
             tuple.reject(dummy);
@@ -97,16 +102,18 @@ describe(@"3.2.3: If `onRejected` is a function", ^{
             __block NSUInteger timesCalledSecond = 0;
             __block NSUInteger timesCalledThird = 0;
             
-            tuple.promise.then(nil, ^(id theReason) {
+            tuple.promise.then(nil, ^id (id theReason) {
                 timesCalledFirst++;
+                return theReason;
             });
             
             __block BOOL secondBlockWasCalled = NO;
             double delayInSeconds = 0.0;
             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
             dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                tuple.promise.then(nil, ^(id theReason) {
+                tuple.promise.then(nil, ^id (id theReason) {
                     timesCalledSecond++;
+                    return theReason;
                 });
                 secondBlockWasCalled = YES;
             });
@@ -115,8 +122,9 @@ describe(@"3.2.3: If `onRejected` is a function", ^{
             delayInSeconds = 0.05;
             popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
             dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                tuple.promise.then(nil, ^(id theReason) {
+                tuple.promise.then(nil, ^id (id theReason) {
                     timesCalledThird++;
+                    return theReason;
                 });
                 thirdBlockWasCalled = YES;
             });
@@ -143,14 +151,16 @@ describe(@"3.2.3: If `onRejected` is a function", ^{
             __block NSUInteger timesCalledFirst = 0;
             __block NSUInteger timesCalledSecond = 0;
             
-            tuple.promise.then(nil, ^(id theValue) {
+            tuple.promise.then(nil, ^id (id theValue) {
                 timesCalledFirst++;
+                return theValue;
             });
             
             tuple.reject(dummy);
             
-            tuple.promise.then(nil, ^(id theValue) {
+            tuple.promise.then(nil, ^id (id theValue) {
                 timesCalledSecond++;
+                return theValue;
             });
             
             [[expectFutureValue(theValue(timesCalledFirst)) shouldEventually] equal:theValue(1)];
@@ -164,10 +174,12 @@ describe(@"3.2.3: If `onRejected` is a function", ^{
             __block BOOL onFulfilledCalled = NO;
             __block BOOL onRejectedCalled = NO;
             
-            promise.then(^(id theValue) {
+            promise.then(^id (id theValue) {
                 onFulfilledCalled = YES;
-            }, ^(id theReason) {
+                return theValue;
+            }, ^id (id theReason) {
                 onRejectedCalled = YES;
+                return theReason;
             });
             
             waitForIt();
@@ -180,10 +192,12 @@ describe(@"3.2.3: If `onRejected` is a function", ^{
             __block BOOL onFulfilledCalled = NO;
             __block BOOL onRejectedCalled = NO;
             
-            tuple.promise.then(^(id theValue) {
+            tuple.promise.then(^id (id theValue) {
                 onFulfilledCalled = YES;
-            }, ^(id theReason) {
+                return theValue;
+            }, ^id (id theReason) {
                 onRejectedCalled = YES;
+                return theReason;
             });
             
             tuple.fulfill(dummy);
@@ -199,10 +213,12 @@ describe(@"3.2.3: If `onRejected` is a function", ^{
             __block BOOL onFulfilledCalled = NO;
             __block BOOL onRejectedCalled = NO;
             
-            tuple.promise.then(^(id theValue) {
+            tuple.promise.then(^id (id theValue) {
                 onFulfilledCalled = YES;
-            }, ^(id theReason) {
+                return theValue;
+            }, ^id (id theReason) {
                 onRejectedCalled = YES;
+                return theReason;
             });
             
             double delayInSeconds = 0.0;
@@ -221,10 +237,12 @@ describe(@"3.2.3: If `onRejected` is a function", ^{
             __block BOOL onFulfilledCalled = NO;
             __block BOOL onRejectedCalled = NO;
             
-            tuple.promise.then(^(id theValue) {
+            tuple.promise.then(^id (id theValue) {
                 onFulfilledCalled = YES;
-            }, ^(id theReason) {
+                return theValue;
+            }, ^id (id theReason) {
                 onRejectedCalled = YES;
+                return theReason;
             });
             
             tuple.fulfill(dummy);

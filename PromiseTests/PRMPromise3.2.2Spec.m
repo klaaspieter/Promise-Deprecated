@@ -18,8 +18,9 @@ __block id value;
 
 describe(@"3.2.2: If ~onFulfilled` is a function, ", ^{
     it(@"3.2.2.1: must be called after `promise` is fulfilled, with `promise`'s fulfillment value as its first argument", ^{
-        fulfilled(dummy).then(^(id theValue) {
+        fulfilled(dummy).then(^id (id theValue) {
             value = theValue;
+            return theValue;
         }, nil);
         
         waitForIt();
@@ -29,8 +30,9 @@ describe(@"3.2.2: If ~onFulfilled` is a function, ", ^{
     describe(@"3.2.2.2: it must not be called more than once.", ^{
         it(@"already-fulfilled", ^{
             __block NSUInteger timesCalled = 0;
-            fulfilled(dummy).then(^(id theValue) {
+            fulfilled(dummy).then(^id (id theValue) {
                 timesCalled++;
+                return theValue;
             }, nil);
             
             waitForIt();
@@ -41,8 +43,9 @@ describe(@"3.2.2: If ~onFulfilled` is a function, ", ^{
             PRMPending *tuple = PRMAdapter.pending;
             __block NSUInteger timesCalled = 0;
             
-            tuple.promise.then(^(id theValue) {
+            tuple.promise.then(^id (id theValue) {
                 timesCalled++;
+                return theValue;
             }, nil);
             
             tuple.fulfill(dummy);
@@ -56,8 +59,9 @@ describe(@"3.2.2: If ~onFulfilled` is a function, ", ^{
             PRMPending *tuple = PRMAdapter.pending;
             __block NSUInteger timesCalled = 0;
             
-            tuple.promise.then(^(id theValue) {
+            tuple.promise.then(^id (id theValue) {
                 timesCalled++;
+                return theValue;
             }, nil);
             
             double delayInSeconds = 0.0;
@@ -74,8 +78,9 @@ describe(@"3.2.2: If ~onFulfilled` is a function, ", ^{
             PRMPending *tuple = PRMAdapter.pending;
             __block NSUInteger timesCalled = 0;
             
-            tuple.promise.then(^(id theValue) {
+            tuple.promise.then(^id (id theValue) {
                 timesCalled++;
+                return theValue;
             }, nil);
             
             tuple.fulfill(dummy);
@@ -98,16 +103,18 @@ describe(@"3.2.2: If ~onFulfilled` is a function, ", ^{
             __block NSUInteger timesCalledSecond = 0;
             __block NSUInteger timesCalledThird = 0;
             
-            tuple.promise.then(^(id theValue) {
+            tuple.promise.then(^id (id theValue) {
                 timesCalledFirst++;
+                return theValue;
             }, nil);
             
             __block BOOL secondBlockWasCalled = NO;
             double delayInSeconds = 0.0;
             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
             dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                tuple.promise.then(^(id theValue) {
+                tuple.promise.then(^id (id theValue) {
                     timesCalledSecond++;
+                    return theValue;
                 }, nil);
                 secondBlockWasCalled = YES;
             });
@@ -116,8 +123,9 @@ describe(@"3.2.2: If ~onFulfilled` is a function, ", ^{
             delayInSeconds = 0.05;
             popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
             dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                tuple.promise.then(^(id theValue) {
+                tuple.promise.then(^id (id theValue) {
                     timesCalledThird++;
+                    return theValue;
                 }, nil);
                 thirdBlockWasCalled = YES;
             });
@@ -144,14 +152,16 @@ describe(@"3.2.2: If ~onFulfilled` is a function, ", ^{
             __block NSUInteger timesCalledFirst = 0;
             __block NSUInteger timesCalledSecond = 0;
             
-            tuple.promise.then(^(id theValue) {
+            tuple.promise.then(^id (id theValue) {
                 timesCalledFirst++;
+                return theValue;
             }, nil);
             
             tuple.fulfill(dummy);
             
-            tuple.promise.then(^(id theValue) {
+            tuple.promise.then(^id (id theValue) {
                 timesCalledSecond++;
+                return theValue;
             }, nil);
             
             [[expectFutureValue(theValue(timesCalledFirst)) shouldEventually] equal:theValue(1)];
@@ -165,10 +175,12 @@ describe(@"3.2.2: If ~onFulfilled` is a function, ", ^{
             __block BOOL onFulfilledCalled = NO;
             __block BOOL onRejectedCalled = NO;
             
-            tuple.promise.then(^(id theValue) {
+            tuple.promise.then(^id (id theValue) {
                 onFulfilledCalled = YES;
-            }, ^(id theReason) {
+                return theValue;
+            }, ^id (id theReason) {
                 onRejectedCalled = YES;
+                return theReason;
             });
             
             tuple.reject(dummy);
@@ -184,10 +196,12 @@ describe(@"3.2.2: If ~onFulfilled` is a function, ", ^{
             __block BOOL onFulfilledCalled = NO;
             __block BOOL onRejectedCalled = NO;
             
-            tuple.promise.then(^(id theValue) {
+            tuple.promise.then(^id (id theValue) {
                 onFulfilledCalled = YES;
-            }, ^(id theReason) {
+                return theValue;
+            }, ^id (id theReason) {
                 onRejectedCalled = YES;
+                return theReason;
             });
             
             double delayInSeconds = 0.0;
@@ -206,10 +220,12 @@ describe(@"3.2.2: If ~onFulfilled` is a function, ", ^{
             __block BOOL onFulfilledCalled = NO;
             __block BOOL onRejectedCalled = NO;
             
-            tuple.promise.then(^(id theValue) {
+            tuple.promise.then(^id (id theValue) {
                 onFulfilledCalled = YES;
-            }, ^(id theReason) {
+                return theValue;
+            }, ^id (id theReason) {
                 onRejectedCalled = YES;
+                return theReason;
             });
             
             tuple.reject(dummy);

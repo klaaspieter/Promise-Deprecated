@@ -12,13 +12,13 @@
 
 @interface PRMHandler : NSObject
 
-@property (nonatomic, readonly, strong) PRMFulfilledHandler onFulfilled;
-@property (nonatomic, readonly, strong) PRMRejectedHandler onRejected;
+@property (nonatomic, readonly, strong) PRMPromiseResolverBlock onFulfilled;
+@property (nonatomic, readonly, strong) PRMPromiseResolverBlock onRejected;
 @property (nonatomic, readonly, strong) PRMPromiseResolverBlock resolver;
 @property (nonatomic, readonly, strong) PRMPromiseResolverBlock rejector;
 
-- (id)initWithFulfilledHandler:(PRMFulfilledHandler)onFulfilled
-               rejectedHandler:(PRMRejectedHandler)onRejected
+- (id)initWithFulfilledHandler:(PRMPromiseResolverBlock)onFulfilled
+               rejectedHandler:(PRMPromiseResolverBlock)onRejected
                       resolver:(PRMPromiseResolverBlock)theResolver
                       rejector:(PRMPromiseResolverBlock)theRejector;
 

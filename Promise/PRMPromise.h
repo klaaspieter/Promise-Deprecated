@@ -10,11 +10,9 @@
 
 @class PRMPromise;
 
-typedef void (^PRMFulfilledHandler)(id theResult);
-typedef void (^PRMRejectedHandler)(id theError);
-typedef PRMPromise *(^ThenMethod)(PRMFulfilledHandler onFulfilled, PRMRejectedHandler onRejected);
+typedef id (^PRMPromiseResolverBlock)(id theValue);
 
-typedef PRMPromise *(^PRMPromiseResolverBlock)(id theValue);
+typedef id (^ThenMethod)(PRMPromiseResolverBlock onFulfilled, PRMPromiseResolverBlock onRejected);
 typedef void (^PRMPromiseResolver)(PRMPromiseResolverBlock resolve, PRMPromiseResolverBlock reject);
 
 @interface PRMPromise : NSObject

@@ -10,8 +10,8 @@
 
 @implementation PRMHandler
 
-- (id)initWithFulfilledHandler:(PRMFulfilledHandler)onFulfilled
-               rejectedHandler:(PRMRejectedHandler)onRejected
+- (id)initWithFulfilledHandler:(PRMPromiseResolverBlock)onFulfilled
+               rejectedHandler:(PRMPromiseResolverBlock)onRejected
                       resolver:(PRMPromiseResolverBlock)theResolver
                       rejector:(PRMPromiseResolverBlock)theRejector;
 {

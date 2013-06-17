@@ -20,8 +20,9 @@ __block id reason;
 
 describe(@"3.2.1: Both `onFulfilled` and `onRejected` are optional arguments", ^{
     it(@"3.2.1.1: must be ignored if `onFulfilled is not a function", ^{
-        rejected(dummy).then(nil, ^(id theReason) {
+        rejected(dummy).then(nil, ^id (id theReason) {
             reason = theReason;
+            return theReason;
         });
         
         waitForIt();
@@ -29,8 +30,9 @@ describe(@"3.2.1: Both `onFulfilled` and `onRejected` are optional arguments", ^
     });
     
     it(@"3.2.1.2: it must be ignored if `onRejected` is not a function", ^{
-        fulfilled(dummy).then(^(id theValue) {
+        fulfilled(dummy).then(^id (id theValue) {
             value = theValue;
+            return theValue;
         }, nil);
         
         waitForIt();

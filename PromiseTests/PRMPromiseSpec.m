@@ -22,14 +22,15 @@ describe(@"initialization", ^{
     });
     
     it(@"is resolved if 'resolve' is called with a value", ^{
-        NSString *resolvedValue = @"value";
+        __block NSString *resolvedValue = @"value";
         PRMPromise *promise = [[PRMPromise alloc] initWithResolver:^(PRMPromiseResolverBlock resolve, PRMPromiseResolverBlock reject) {
             resolve(resolvedValue);
         }];
         
         __block NSString *value;
-        promise.then(^(id theValue) {
+        promise.then(^id (id theValue) {
             value = theValue;
+            return nil;
         }, nil);
         
         waitForIt();
@@ -46,10 +47,12 @@ describe(@"initialization", ^{
         __block NSString *value;
         __block NSError *reason;
         
-        promise.then(^(id theValue) {
+        promise.then(^PRMPromise *(id theValue) {
             value = theValue;
-        }, ^(id theReason) {
+            return theValue;
+        }, ^id (id theReason) {
             reason = theReason;
+            return theReason;
         });
         
         waitForIt();
@@ -64,8 +67,9 @@ describe(@"initialization", ^{
         }];
         
         __block NSException *exception = nil;
-        promise.then(^(id theValue) {}, ^(id theError) {
+        promise.then(nil, ^(id theError) {
             exception = theError;
+            return exception;
         });
         
         waitForIt();

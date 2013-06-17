@@ -19,9 +19,11 @@ describe(@"3.2.4: `then` must return before `onFulfilled or `onRejected` is call
         __block BOOL blockWasCalled = NO;
         
         PRMPromise *promise = fulfilled(dummy);
-        promise.then(^(id theValue) {
+        promise.then(^id (id theValue) {
             [[theValue(thenHasReturned) should] beYes];
             blockWasCalled = YES;
+            
+            return theValue;
         }, nil);
         
         thenHasReturned = YES;
@@ -35,9 +37,11 @@ describe(@"3.2.4: `then` must return before `onFulfilled or `onRejected` is call
         __block BOOL blockWasCalled = NO;
         
         PRMPromise *promise = rejected(dummy);
-        promise.then(nil, ^(id theReason) {
+        promise.then(nil, ^id (id theReason) {
             [[theValue(thenHasReturned) should] beYes];
             blockWasCalled = YES;
+            
+            return theReason;
         });
         
         thenHasReturned = YES;

@@ -12,9 +12,7 @@
 SPEC_BEGIN(PRMPromise3_2_5Spec)
 
 __block NSDictionary *sentinel = @{@"sentinel": @"sentinel"};
-
-#warning The handlers should return this, but we need to support returning from handlers first.
-//__block NSDictionary *other = @{@"other": @"other"};
+__block NSDictionary *other = @{@"other": @"other"};
 
 describe(@"3.2.5: `then` may be called multiple times on the same promise.", ^{
     describe(@"3.2.5.1: If/when `promise` is fulfilled, respective `onFulfilled` callbacks must execute in the order ", ^{
@@ -22,22 +20,23 @@ describe(@"3.2.5: `then` may be called multiple times on the same promise.", ^{
             PRMPromise *promise = fulfilled(sentinel);
 
             __block id handler1Value = nil;
-            PRMFulfilledHandler handler1 = ^(id theValue) { handler1Value = theValue; };
+            PRMPromiseResolverBlock handler1 = ^id (id theValue) { handler1Value = theValue; return other; };
             __block id handler2Value = nil;;
-            PRMFulfilledHandler handler2 = ^(id theValue) { handler2Value = theValue; };
+            PRMPromiseResolverBlock handler2 = ^id (id theValue) { handler2Value = theValue; return other; };
             __block id handler3Value = nil;;
-            PRMFulfilledHandler handler3 = ^(id theValue) { handler3Value = theValue; };
+            PRMPromiseResolverBlock handler3 = ^id (id theValue) { handler3Value = theValue; return other; };
             
             __block BOOL rejectedHandlerCalled = NO;
-            PRMRejectedHandler rejectedHandler = ^(id theReason) { rejectedHandlerCalled = YES; };
+            PRMPromiseResolverBlock rejectedHandler = ^id (id theReason) { rejectedHandlerCalled = YES; return nil; };
             
             promise.then(handler1, rejectedHandler);
             promise.then(handler2, rejectedHandler);
             promise.then(handler3, rejectedHandler);
             
             __block id value = nil;
-            promise.then(^(id theValue) {
+            promise.then(^id (id theValue) {
                 value = theValue;
+                return theValue;
             }, nil);
             
             waitForIt();
@@ -53,22 +52,23 @@ describe(@"3.2.5: `then` may be called multiple times on the same promise.", ^{
             PRMPromise *promise = fulfilled(sentinel);
             
             __block id handler1Value = nil;
-            PRMFulfilledHandler handler1 = ^(id theValue) { handler1Value = theValue; };
+            PRMPromiseResolverBlock handler1 = ^id (id theValue) { handler1Value = theValue; return other; };
             __block id handler2Value = nil;;
-            PRMFulfilledHandler handler2 = ^(id theValue) { @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"" userInfo:nil]; };
+            PRMPromiseResolverBlock handler2 = ^id (id theValue) { @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"" userInfo:nil]; };
             __block id handler3Value = nil;;
-            PRMFulfilledHandler handler3 = ^(id theValue) { handler3Value = theValue; };
+            PRMPromiseResolverBlock handler3 = ^id (id theValue) { handler3Value = theValue; return other; };
             
             __block BOOL rejectedHandlerCalled = NO;
-            PRMRejectedHandler rejectedHandler = ^(id theReason) { rejectedHandlerCalled = YES; };
+            PRMPromiseResolverBlock rejectedHandler = ^id (id theReason) { rejectedHandlerCalled = YES; return nil; };
             
             promise.then(handler1, rejectedHandler);
             promise.then(handler2, rejectedHandler);
             promise.then(handler3, rejectedHandler);
             
             __block id value = nil;
-            promise.then(^(id theValue) {
+            promise.then(^id (id theValue) {
                 value = theValue;
+                return theValue;
             }, nil);
             
             waitForIt();
@@ -110,9 +110,9 @@ describe(@"3.2.5: `then` may be called multiple times on the same promise.", ^{
             PRMPromise *promise = fulfilled(sentinel);
             NSMutableArray *calls = [NSMutableArray array];
             
-            PRMFulfilledHandler handler1 = ^(id theValue) { [calls addObject:@1]; };
-            PRMFulfilledHandler handler2 = ^(id theValue) { [calls addObject:@2]; };
-            PRMFulfilledHandler handler3 = ^(id theValue) { [calls addObject:@3]; };
+            PRMPromiseResolverBlock handler1 = ^id (id theValue) { [calls addObject:@1]; return theValue; };
+            PRMPromiseResolverBlock handler2 = ^id (id theValue) { [calls addObject:@2]; return theValue; };
+            PRMPromiseResolverBlock handler3 = ^id (id theValue) { [calls addObject:@3]; return theValue; };
             
             promise.then(handler1, nil);
             promise.then(handler2, nil);
@@ -129,13 +129,14 @@ describe(@"3.2.5: `then` may be called multiple times on the same promise.", ^{
             PRMPromise *promise = fulfilled(sentinel);
             NSMutableArray *calls = [NSMutableArray array];
             
-            __block PRMFulfilledHandler handler1 = ^(id theValue) { [calls addObject:@1]; };
-            PRMFulfilledHandler handler2 = ^(id theValue) { [calls addObject:@2]; };
-            __block PRMFulfilledHandler handler3 = ^(id theValue) { [calls addObject:@3]; };
+            __block PRMPromiseResolverBlock handler1 = ^id (id theValue) { [calls addObject:@1]; return theValue; };
+            PRMPromiseResolverBlock handler2 = ^id (id theValue) { [calls addObject:@2]; return theValue; };
+            __block PRMPromiseResolverBlock handler3 = ^id (id theValue) { [calls addObject:@3]; return theValue; };
             
-            promise.then(^(id theValue) {
+            promise.then(^id (id theValue) {
                 handler1(theValue);
                 promise.then(handler3, nil);
+                return theValue;
             }, nil);
             promise.then(handler2, nil);
             
@@ -152,22 +153,23 @@ describe(@"3.2.5: `then` may be called multiple times on the same promise.", ^{
             PRMPromise *promise = rejected(sentinel);
             
             __block id handler1Value = nil;
-            PRMFulfilledHandler handler1 = ^(id theValue) { handler1Value = theValue; };
+            PRMPromiseResolverBlock handler1 = ^id (id theValue) { handler1Value = theValue; return other; };
             __block id handler2Value = nil;;
-            PRMFulfilledHandler handler2 = ^(id theValue) { handler2Value = theValue; };
+            PRMPromiseResolverBlock handler2 = ^id (id theValue) { handler2Value = theValue; return other; };
             __block id handler3Value = nil;;
-            PRMFulfilledHandler handler3 = ^(id theValue) { handler3Value = theValue; };
+            PRMPromiseResolverBlock handler3 = ^id (id theValue) { handler3Value = theValue; return other; };
             
             __block BOOL fulfilledHandlerCalled = NO;
-            PRMRejectedHandler fulfilledHandler = ^(id theReason) { fulfilledHandlerCalled = YES; };
+            PRMPromiseResolverBlock fulfilledHandler = ^id (id theReason) { fulfilledHandlerCalled = YES; return nil; };
             
             promise.then(fulfilledHandler, handler1);
             promise.then(fulfilledHandler, handler2);
             promise.then(fulfilledHandler, handler3);
             
             __block id value = nil;
-            promise.then(nil, ^(id theValue) {
+            promise.then(nil, ^id (id theValue) {
                 value = theValue;
+                return theValue;
             });
             
             waitForIt();
@@ -183,22 +185,23 @@ describe(@"3.2.5: `then` may be called multiple times on the same promise.", ^{
             PRMPromise *promise = rejected(sentinel);
             
             __block id handler1Value = nil;
-            PRMFulfilledHandler handler1 = ^(id theValue) { handler1Value = theValue; };
+            PRMPromiseResolverBlock handler1 = ^id (id theValue) { handler1Value = theValue; return other; };
             __block id handler2Value = nil;;
-            PRMFulfilledHandler handler2 = ^(id theValue) { @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"" userInfo:nil]; };
+            PRMPromiseResolverBlock handler2 = ^id (id theValue) { @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"" userInfo:nil];};
             __block id handler3Value = nil;;
-            PRMFulfilledHandler handler3 = ^(id theValue) { handler3Value = theValue; };
+            PRMPromiseResolverBlock handler3 = ^id (id theValue) { handler3Value = theValue; return other; };
             
             __block BOOL fulfilledHandlerCalled = NO;
-            PRMRejectedHandler fulfilledHandler = ^(id theReason) { fulfilledHandlerCalled = YES; };
+            PRMPromiseResolverBlock fulfilledHandler = ^id (id theReason) { fulfilledHandlerCalled = YES; return nil; };
             
             promise.then(fulfilledHandler, handler1);
             promise.then(fulfilledHandler, handler2);
             promise.then(fulfilledHandler, handler3);
             
             __block id value = nil;
-            promise.then(nil, ^(id theValue) {
+            promise.then(nil, ^id (id theValue) {
                 value = theValue;
+                return theValue;
             });
             
             waitForIt();
@@ -243,9 +246,9 @@ describe(@"3.2.5: `then` may be called multiple times on the same promise.", ^{
             PRMPromise *promise = rejected(sentinel);
             NSMutableArray *calls = [NSMutableArray array];
             
-            PRMFulfilledHandler handler1 = ^(id theValue) { [calls addObject:@1]; };
-            PRMFulfilledHandler handler2 = ^(id theValue) { [calls addObject:@2]; };
-            PRMFulfilledHandler handler3 = ^(id theValue) { [calls addObject:@3]; };
+            PRMPromiseResolverBlock handler1 = ^id (id theValue) { [calls addObject:@1]; return other; };
+            PRMPromiseResolverBlock handler2 = ^id (id theValue) { [calls addObject:@2]; return other; };
+            PRMPromiseResolverBlock handler3 = ^id (id theValue) { [calls addObject:@3]; return other; };
             
             promise.then(nil, handler1);
             promise.then(nil, handler2);
@@ -262,13 +265,14 @@ describe(@"3.2.5: `then` may be called multiple times on the same promise.", ^{
             PRMPromise *promise = rejected(sentinel);
             NSMutableArray *calls = [NSMutableArray array];
             
-            __block PRMFulfilledHandler handler1 = ^(id theValue) { [calls addObject:@1]; };
-            PRMFulfilledHandler handler2 = ^(id theValue) { [calls addObject:@2]; };
-            __block PRMFulfilledHandler handler3 = ^(id theValue) { [calls addObject:@3]; };
+            __block PRMPromiseResolverBlock handler1 = ^id (id theValue) { [calls addObject:@1]; return other; };
+            PRMPromiseResolverBlock handler2 = ^id (id theValue) { [calls addObject:@2]; return other; };
+            __block PRMPromiseResolverBlock handler3 = ^id (id theValue) { [calls addObject:@3]; return other; };
             
-            promise.then(nil, ^(id theValue) {
+            promise.then(nil, ^id (id theValue) {
                 handler1(theValue);
                 promise.then(nil, handler3);
+                return theValue;
             });
             promise.then(nil, handler2);
             
