@@ -155,60 +155,71 @@ describe(@"3.2.2: If ~onFulfilled` is a function, ", ^{
             [[expectFutureValue(theValue(timesCalledSecond)) shouldEventually] equal:theValue(1)];
         });
     });
+    
+    describe(@"3.2.2.3: it must not be called if `onRejected` has been called.", ^{
+        it(@"trying to reject then immediately fulfill", ^{
+            PRMPending *tuple = PRMAdapter.pending;
+            __block BOOL onFulfilledCalled = NO;
+            __block BOOL onRejectedCalled = NO;
+            
+            tuple.promise.then(^(id theValue) {
+                onFulfilledCalled = YES;
+            }, ^(id theReason) {
+                onRejectedCalled = YES;
+            });
+            
+            tuple.reject(dummy);
+            tuple.fulfill(dummy);
+            
+            [[theValue(onFulfilledCalled) should] beNo];
+            [[theValue(onRejectedCalled) should] beYes];
+        });
+        
+        it(@"trying to reject then fulfill, delayed", ^{
+            PRMPending *tuple = PRMAdapter.pending;
+            __block BOOL onFulfilledCalled = NO;
+            __block BOOL onRejectedCalled = NO;
+            
+            tuple.promise.then(^(id theValue) {
+                onFulfilledCalled = YES;
+            }, ^(id theReason) {
+                onRejectedCalled = YES;
+            });
+            
+            double delayInSeconds = 0.0;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                tuple.reject(dummy);
+                tuple.fulfill(dummy);
+            });
+            
+            [[expectFutureValue(theValue(onFulfilledCalled)) shouldEventually] beNo];
+            [[expectFutureValue(theValue(onRejectedCalled)) shouldEventually] beYes];
+        });
+        
+        it(@"trying to reject immediately then fulfill delayed", ^{
+            PRMPending *tuple = PRMAdapter.pending;
+            __block BOOL onFulfilledCalled = NO;
+            __block BOOL onRejectedCalled = NO;
+            
+            tuple.promise.then(^(id theValue) {
+                onFulfilledCalled = YES;
+            }, ^(id theReason) {
+                onRejectedCalled = YES;
+            });
+            
+            tuple.reject(dummy);
+            
+            double delayInSeconds = 0.0;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                tuple.fulfill(dummy);
+            });
+            
+            [[expectFutureValue(theValue(onFulfilledCalled)) shouldEventually] beNo];
+            [[expectFutureValue(theValue(onRejectedCalled)) shouldEventually] beYes];
+        });
+    });
 });
 
 SPEC_END
-    
-    //         specify("trying to reject then immediately fulfill", function (done) {
-    //             var tuple = pending();
-    //             var onRejectedCalled = false;
-    
-    //             tuple.promise.then(function onFulfilled() {
-    //                 assert.strictEqual(onRejectedCalled, false);
-    //                 done();
-    //             }, function onRejected() {
-    //                 onRejectedCalled = true;
-    //             });
-    
-    //             tuple.reject(dummy);
-    //             tuple.fulfill(dummy);
-    //             setTimeout(done, 100);
-    //         });
-    
-    //         specify("trying to reject then fulfill, delayed", function (done) {
-    //             var tuple = pending();
-    //             var onRejectedCalled = false;
-    
-    //             tuple.promise.then(function onFulfilled() {
-    //                 assert.strictEqual(onRejectedCalled, false);
-    //                 done();
-    //             }, function onRejected() {
-    //                 onRejectedCalled = true;
-    //             });
-    
-    //             setTimeout(function () {
-    //                 tuple.reject(dummy);
-    //                 tuple.fulfill(dummy);
-    //             }, 50);
-    //             setTimeout(done, 100);
-    //         });
-    
-    //         specify("trying to reject immediately then fulfill delayed", function (done) {
-    //             var tuple = pending();
-    //             var onRejectedCalled = false;
-    
-    //             tuple.promise.then(function onFulfilled() {
-    //                 assert.strictEqual(onRejectedCalled, false);
-    //                 done();
-    //             }, function onRejected() {
-    //                 onRejectedCalled = true;
-    //             });
-    
-    //             tuple.reject(dummy);
-    //             setTimeout(function () {
-    //                 tuple.fulfill(dummy);
-    //             }, 50);
-    //             setTimeout(done, 100);
-    //         });
-    //     });
-    // });
