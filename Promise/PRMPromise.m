@@ -98,6 +98,8 @@
             theHandler.resolver(value);
         else
             theHandler.rejector(value);
+        
+        return;
     }
     
     id returnValue;
@@ -109,7 +111,7 @@
         return;
     }
     
-    theHandler.resolver(value);
+    theHandler.resolver(returnValue);
 }
 
 - (ThenMethod)then;

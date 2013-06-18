@@ -11,7 +11,12 @@
 
 SPEC_BEGIN(PRMPromise3_2_5Spec)
 
+__block NSDictionary *dummy = @{@"dummy": @"dummy"};
+
 __block NSDictionary *sentinel = @{@"sentinel": @"sentinel"};
+__block NSDictionary *sentinel3 = @{ @"sentinel3": @"sentinel3" };
+
+
 __block NSDictionary *other = @{@"other": @"other"};
 __block NSException *exception = [NSException exceptionWithName:NSInvalidArgumentException reason:@"" userInfo:nil];
 
@@ -81,30 +86,38 @@ describe(@"3.2.5: `then` may be called multiple times on the same promise.", ^{
             [[theValue(rejectedHandlerCalled) should] beNo];
         });
         
-        pending(@"results in multiple branching chains with their own fulfillment values", ^{
-            //                 var semiDone = callbackAggregator(3, done);
+        it(@"results in multiple branching chains with their own fulfillment values", ^{
             
-            //                 promise.then(function () {
-            //                     return sentinel;
-            //                 }).then(function (value) {
-            //                     assert.strictEqual(value, sentinel);
-            //                     semiDone();
-            //                 });
+            PRMPromise *promise = fulfilled(dummy);
+            __block id value1 = nil;
+            __block id value2 = nil;
+            __block id value3 = nil;
             
-            //                 promise.then(function () {
-            //                     throw sentinel2;
-            //                 }).then(null, function (reason) {
-            //                     assert.strictEqual(reason, sentinel2);
-            //                     semiDone();
-            //                 });
-            
-            //                 promise.then(function () {
-            //                     return sentinel3;
-            //                 }).then(function (value) {
-            //                     assert.strictEqual(value, sentinel3);
-            //                     semiDone();
-            //                 });
-            //             });
+            ((PRMPromise *)promise.then(^id (id theValue) {
+                return sentinel;
+            }, nil)).then(^id (id theValue) {
+                value1 = theValue;
+                return nil;
+            }, nil);
+
+            ((PRMPromise *)promise.then(^id (id theValue) {
+                @throw exception;
+            }, nil)).then(nil, ^id (id theReason) {
+                value2 = theReason;
+                return nil;
+            });
+
+            ((PRMPromise *)promise.then(^id (id theValue) {
+                return sentinel3;
+            }, nil)).then(^id (id theValue) {
+                value3 = theValue;
+                return nil;
+            }, nil);
+
+            waitForIt();
+            [[value1 should] equal:sentinel];
+            [[value2 should] equal:exception];
+            [[value3 should] equal:sentinel3];
         });
         
         it(@"`onFulfilled` handlers are called in the original order", ^{
@@ -214,33 +227,39 @@ describe(@"3.2.5: `then` may be called multiple times on the same promise.", ^{
             [[theValue(fulfilledHandlerCalled) should] beNo];
         });
         
-        pending(@"results in multiple branching chains with their own fulfillment values", ^{
+        it(@"results in multiple branching chains with their own fulfillment values", ^{
             
-            //             testRejected(sentinel, function (promise, done) {
-            //                 var semiDone = callbackAggregator(3, done);
+            PRMPromise *promise = rejected(dummy);
+            __block id value1 = nil;
+            __block id value2 = nil;
+            __block id value3 = nil;
             
-            //                 promise.then(null, function () {
-            //                     return sentinel;
-            //                 }).then(function (value) {
-            //                     assert.strictEqual(value, sentinel);
-            //                     semiDone();
-            //                 });
+            ((PRMPromise *)promise.then(nil, ^id (id theValue) {
+                return sentinel;
+            })).then(^id (id theValue) {
+                value1 = theValue;
+                return nil;
+            }, nil);
             
-            //                 promise.then(null, function () {
-            //                     throw sentinel2;
-            //                 }).then(null, function (reason) {
-            //                     assert.strictEqual(reason, sentinel2);
-            //                     semiDone();
-            //                 });
+            ((PRMPromise *)promise.then(nil, ^id (id theValue) {
+                @throw exception;
+            })).then(nil, ^id (id theReason) {
+                value2 = theReason;
+                return nil;
+            });
             
-            //                 promise.then(null, function () {
-            //                     return sentinel3;
-            //                 }).then(function (value) {
-            //                     assert.strictEqual(value, sentinel3);
-            //                     semiDone();
-            //                 });
-            //             });
-            //         });
+            ((PRMPromise *)promise.then(nil, ^id (id theValue) {
+                return sentinel3;
+            })).then(^id (id theValue) {
+                value3 = theValue;
+                return nil;
+            }, nil);
+            
+            waitForIt();
+            [[value1 should] equal:sentinel];
+            [[value2 should] equal:exception];
+            [[value3 should] equal:sentinel3];
+
         });
         
         it(@"`onRejected` handlers are called in the original order", ^{
