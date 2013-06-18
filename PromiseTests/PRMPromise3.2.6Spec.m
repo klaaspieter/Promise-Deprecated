@@ -114,7 +114,7 @@ describe(@"3.2.6: `then` must return a promise: `promise2 = promise1.then(onFulf
     });
     
     describe(@"3.2.6.3: If either `onFulfilled` or `onRejected` returns a promise (call it `returnedPromise`), `promise2` must assume the state of `returnedPromise`", ^{
-        pending(@"3.2.6.3.1: If `returnedPromise` is pending, `promise2` must remain pending until `returnedPromise` is fulfilled or rejected.", ^{
+        it(@"3.2.6.3.1: If `returnedPromise` is pending, `promise2` must remain pending until `returnedPromise` is fulfilled or rejected.", ^{
             PRMPromise *promise1 = fulfilled(dummy);
             __block BOOL wasFulfilled1 = NO;
             __block BOOL wasRejected1 = NO;
@@ -156,7 +156,7 @@ describe(@"3.2.6: `then` must return a promise: `promise2 = promise1.then(onFulf
         
         describe(@"3.2.6.3.2: If/when `returnedPromise` is fulfilled, `promise2` must be fulfilled with the same value.", ^{
             describe(@"`promise1` is fulfilled, and `returnedPromise` is:", ^{
-                pending(@"fulfilled", ^{
+                it(@"fulfilled", ^{
                     PRMPromise *promise1 = fulfilled(dummy);
                     PRMPromise *promise2 = promise1.then(^id (id theValue) {
                         return fulfilled(sentinel);
@@ -174,7 +174,7 @@ describe(@"3.2.6: `then` must return a promise: `promise2 = promise1.then(onFulf
             });
             
             describe(@"`promise1` is rejected, and `returnedPromise` is:", ^{
-                pending(@"fulfilled", ^{
+                it(@"fulfilled", ^{
                     PRMPromise *promise1 = rejected(dummy);
                     PRMPromise *promise2 = promise1.then(nil, ^id (id theReason) {
                         return fulfilled(sentinel);
@@ -194,7 +194,7 @@ describe(@"3.2.6: `then` must return a promise: `promise2 = promise1.then(onFulf
         
         describe(@"3.2.6.3.3: If/when `returnedPromise` is rejected, `promise2` must be rejected with the same reason.", ^{
             describe(@"`promise1` is fulfilled, and `returnedPromise` is:", ^{
-                pending(@"rejected", ^{
+                it(@"rejected", ^{
                     PRMPromise *promise1 = fulfilled(dummy);
                     PRMPromise *promise2 = promise1.then(^id (id theValue) {
                         return rejected(sentinel);
@@ -212,7 +212,7 @@ describe(@"3.2.6: `then` must return a promise: `promise2 = promise1.then(onFulf
             });
             
             describe(@"`promise1` is rejected, and `returnedPromise` is:", ^{
-                pending(@"rejected", ^{
+                it(@"rejected", ^{
                     PRMPromise *promise1 = rejected(dummy);
                     PRMPromise *promise2 = promise1.then(nil, ^id (id theReason) {
                         return rejected(sentinel);

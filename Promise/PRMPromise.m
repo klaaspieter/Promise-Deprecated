@@ -1,4 +1,4 @@
-//
+
 //  Promise.m
 //  Promise
 //
@@ -18,6 +18,8 @@
 
 @property (nonatomic, readwrite, strong) NSMutableArray *deferreds;
 
+@property (nonatomic, readwrite, assign) BOOL isDelegating;
+
 @end
 
 @implementation PRMPromise
@@ -36,11 +38,20 @@
         self.deferreds = [[NSMutableArray alloc] init];
         
         @try {
+            __weak typeof(self) weakSelf = self;
             theResolver(^PRMPromise * (id theValue) {
-                [self resolvePromise:theValue];
+                
+                if (weakSelf.isDelegating)
+                    return nil;
+                
+                [weakSelf resolvePromise:theValue];
                 return theValue;
             }, ^PRMPromise *(id theReason) {
-                [self rejectPromise:theReason];
+                
+                if (weakSelf.isDelegating)
+                    return nil;
+                
+                [weakSelf rejectPromise:theReason];
                 return theReason;
             });
         }
@@ -57,9 +68,35 @@
     if (self.isResolved)
         return;
     
-    self.isResolved = YES;
-    self.value = theValue;
-    [self didResolve];
+    @try {
+        if (theValue == self)
+        {
+            @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"A promise cannot be resolved with itself." userInfo:nil];
+        }
+        
+        if (theValue && [theValue isKindOfClass:[PRMPromise class]])
+        {
+            self.isDelegating = YES;
+            PRMPromise *promiseValue = (PRMPromise *)theValue;
+            promiseValue.then(^id (id theValue) {
+                [self resolvePromise:theValue];
+                return nil;
+            }, ^id (id theReason) {
+                [self rejectPromise:theReason];
+                return nil;
+            });
+            
+            return;
+        }
+        
+        
+        self.isResolved = YES;
+        self.value = theValue;
+        [self didResolve];
+    }
+    @catch (NSException *exception) {
+        [self rejectPromise:exception];
+    }
 }
 
 - (void)rejectPromise:(id)theReason;
