@@ -17,8 +17,12 @@
 {
     if (self = [super init])
     {
-        _onFulfilled = onFulfilled;
-        _onRejected = onRejected;
+        if ([onFulfilled isKindOfClass:NSClassFromString(@"NSBlock")])
+            _onFulfilled = onFulfilled;
+        
+        if ([onRejected isKindOfClass:NSClassFromString(@"NSBlock")])
+            _onRejected = onRejected;
+        
         _resolver = theResolver;
         _rejector = theRejector;
     }
