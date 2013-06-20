@@ -10,6 +10,14 @@
 
 #import "PRMPromise.h"
 
+@interface PromiseSubclass : PRMPromise
+
+@end
+
+@implementation PromiseSubclass
+
+@end
+
 SPEC_BEGIN(PRMPromiseSpec)
 
 #pragma clang diagnostic push
@@ -74,6 +82,12 @@ describe(@"initialization", ^{
         
         waitForIt();
         [[exception should] equal:resolvedException];
+    });
+    
+    it(@"always returns a promise of the same class", ^{
+        PromiseSubclass *promise = [[PromiseSubclass alloc] initWithResolver:^(PRMPromiseResolverBlock resolve, PRMPromiseResolverBlock reject) {}];
+        id promise2 = promise.then(nil, nil);
+        [[promise2 should] beKindOfClass:[PromiseSubclass class]];
     });
 });
 #pragma clang diagnostic pop

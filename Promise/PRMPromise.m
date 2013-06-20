@@ -154,7 +154,7 @@
 - (ThenMethod)then;
 {
     return ^(PRMPromiseResolverBlock onFulfilled, PRMPromiseResolverBlock onRejected) {
-        return [[PRMPromise alloc] initWithResolver:^(PRMPromiseResolverBlock resolve, PRMPromiseResolverBlock reject) {
+        return [[[self class] alloc] initWithResolver:^(PRMPromiseResolverBlock resolve, PRMPromiseResolverBlock reject) {
             PRMHandler *handler = [[PRMHandler alloc] initWithFulfilledHandler:onFulfilled
                                                                rejectedHandler:onRejected
                                                                       resolver:resolve
